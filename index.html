@@ -17,12 +17,20 @@
         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgOI9pbv5PlzwCVR_ie86h5nfCwqkcK5a94w&s" alt="">
       </div>
       
-      <!-- 모바일 햄버거 메뉴/검색메뉴뉴 -->
-      <div class="mobile-nav d-lg-none">
-        <button class="hamburger" onclick="toggleNav()">☰</button>
+      
+      <!-- 모바일 햄버거 메뉴/검색메뉴 -->
+      <div class="nav-container">
+        <div class="mobile-nav d-lg-none">
+          <button class="hamburger" onclick="toggleNav()">☰</button>
+        </div>
         <i class="fa fa-search search-icon" id="search-icon"></i>
+        <!-- 검색창 -->
+        <div id="search-box" class="search-box">
+          <input type="text" id="search-input" placeholder="검색어 입력...">
+        </div>
       </div>
     </section>
+
 
       <!-- 웹사이트 카테고리 메뉴 -->
       <div class="menus d-none d-lg-flex">
@@ -45,10 +53,7 @@
         <button>Sports</button>
         <button>Technology</button>
       </div>
-        <!-- 검색창 (초기에는 숨김) -->
-    <div id="search-box" class="search-box">
-      <input type="text" id="search-input" placeholder="검색어 입력...">
-    </div>
+
         
 
     <section id="news-board">

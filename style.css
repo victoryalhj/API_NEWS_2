@@ -36,15 +36,27 @@
 .mobile-nav {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
+  position: relative;
+}
+/* 검색 */
+.nav-container {
+  display: flex;
 }
 .search-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 24px;
   cursor: pointer;
+  margin: 0 5px;
 }
 .search-box {
   display: none;
+  margin-top: 6px;
 }
+
 /* 모바일 사이드 메뉴 */
 .sidenav {
   height: 100%;
@@ -102,4 +114,6 @@ text-align: center;
   .hamburger {
     display: block;
   }
+
+
 }
