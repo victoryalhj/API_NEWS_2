@@ -1,0 +1,105 @@
+.head-line {
+  margin-top: 1em;
+  display: flex;
+  justify-content: center;
+}
+.head-line img {
+  width: 430px;
+}
+/* 웹사이트 카테고리 메뉴 */
+.menus {
+  margin-top: 1em;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  border-top: 1px solid lightgray;
+  border-bottom: 4px double black;
+}
+.menus button {
+  border: none;
+  background: none;
+  margin: 5px;
+  cursor: pointer;
+}
+.menus button:hover {
+  background-color: yellow;
+}
+
+/* 모바일 햄버거 메뉴 */
+.hamburger {
+  font-size: 30px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  display: none;
+}
+.mobile-nav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.search-icon {
+  font-size: 24px;
+  cursor: pointer;
+}
+.search-box {
+  display: none;
+}
+/* 모바일 사이드 메뉴 */
+.sidenav {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: lightyellow;
+  overflow: hidden;
+  transition: 0.5s;
+}
+.sidenav button {
+  display: block;
+  padding: 15px;
+  border: none;
+  background: none;
+  color: black;
+  font-size: 20px;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+}
+.sidenav button:hover {
+  background-color: #575757;
+}
+.sidenav .closebtn {
+  position: relative;
+  text-align: center;
+  top: 10px;
+  right: 10px;
+  font-size: 30px;
+  color: black;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+.sidenav button {
+text-align: center;
+}
+
+.news-image-size {
+  max-width: 100%;
+  max-height: 250px;
+
+}
+.news {
+  border-bottom: 1px solid black;
+}
+
+@media screen and (max-width: 992px) {
+  .menus {
+    display: none;
+  }
+
+  .hamburger {
+    display: block;
+  }
+}
