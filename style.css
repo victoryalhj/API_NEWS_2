@@ -32,6 +32,7 @@
   background: none;
   cursor: pointer;
   display: none;
+  margin-bottom: 4px;
 }
 .mobile-nav {
   display: flex;
@@ -54,7 +55,7 @@
 }
 .search-box {
   display: none;
-  margin-top: 6px;
+  margin-top: 8px;
 }
 
 /* 모바일 사이드 메뉴 */
