@@ -4,6 +4,10 @@ const menus = document.querySelectorAll('.menus button')
 menus.forEach((menu) =>
   menu.addEventListener("click",(event)=>getNewsByCategory(event)))
 
+const categoryButtons = document.querySelectorAll('menus button, .sidenav button');
+
+categoryButtons.forEach((button) =>
+  button.addEventListener("click", (event) => getNewsByCategory(event)));
 
 
 const getLatestNews = async() => {
