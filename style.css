@@ -115,6 +115,11 @@ text-align: center;
 
   .hamburger {
     display: block;
+    color: black;
+  }
+  #logo-button {
+    width: 80%;
+    margin: 5px auto;
   }
 
 
