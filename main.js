@@ -5,32 +5,33 @@ menus.forEach((menu) =>
   menu.addEventListener("click",(event)=>getNewsByCategory(event)))
 
 const categoryButtons = document.querySelectorAll('menus button, .sidenav button');
-
 categoryButtons.forEach((button) =>
   button.addEventListener("click", (event) => getNewsByCategory(event)));
 
+let url = new URL(`https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?country=kr&pageSize=20`)
 
-const getLatestNews = async() => {
-  // const url = new URL(`https://newsapi.org/v2/top-headlines?country=us&apiKey=${API_KEY}`);
-  const url = new URL(`https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?country=kr&pageSize=20`);
-
+//코드리팩토링
+const getNews = async() => {
   const response = await fetch(url);
   const data = await response.json();
   newsList = data.articles
   render();
-  console.log("ddd",newsList);
+}
+
+
+const getLatestNews = async() => {
+  // const url = new URL(`https://newsapi.org/v2/top-headlines?country=us&apiKey=${API_KEY}`);
+  url = new URL();
+
+  getNews();
+
 };
 
 
 const getNewsByCategory = async (event) => {
     const category = event.target.textContent.toLowerCase();
-  console.log("category",category);
-  const url = new URL(`https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?country=kr&category=${category}&pageSize=20`);
-  const response = await fetch(url);
-  const data = await response.json();
-  console.log("ddd",data);
-  newsList = data.articles;
-  render();
+  url = new URL(`https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?country=kr&category=${category}&pageSize=20`);
+  getNews();
 }
 
 
@@ -108,13 +109,9 @@ document.getElementById("search-icon").addEventListener("click", function () {
 //검색버튼
 const getNewsByKeyword = async() => {
   const keyword = document.getElementById("search-input").value;
-  console.log("keyword",keyword)
-  const url = new URL(`https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?country=kr&q=${keyword}&pageSize=20`);
-  const response = await fetch(url);
-  const data = await response.json();
-  console.log("keyword data",data)
-  newsList = data.articles; 
-  render();
+  url = new URL(`https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?country=kr&q=${keyword}&pageSize=20`);
+  
+  getNews();
 }
 
 
