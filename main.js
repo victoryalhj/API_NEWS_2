@@ -10,18 +10,37 @@ categoryButtons.forEach((button) =>
 
 let url = new URL(`https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?country=kr&pageSize=20`)
 
-//코드리팩토링
+//코드리팩토링+에러핸들링링
 const getNews = async() => {
-  const response = await fetch(url);
-  const data = await response.json();
-  newsList = data.articles
-  render();
+  try {
+    const response = await fetch(url);
+    console.log("response",response)
+
+    const data = await response.json();
+ 
+    if(response.status===200){
+        //검색결과가 없다면 - 에러
+        if(data.articles.length === 0) {
+          throw new Error("No result for this search")
+        }
+      newsList = data.articles;
+      render();
+    }else{
+      throw new Error(data.message)
+    }
+
+
+  }catch(error){
+    console.log("error",error.message);
+    errorRender(error.message)
+  }
+;
 }
 
 
 const getLatestNews = async() => {
   // const url = new URL(`https://newsapi.org/v2/top-headlines?country=us&apiKey=${API_KEY}`);
-  url = new URL();
+  url = new URL(`https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?country=kr&pageSize=20`);
 
   getNews();
 
@@ -114,7 +133,13 @@ const getNewsByKeyword = async() => {
   getNews();
 }
 
-
+//에러메세지 보여주는 함수
+const errorRender = (errorMessage) => {
+  const errorHTML = `<div class="alert alert-danger" role="alert">
+  ${errorMessage}
+  </div>`;
+  document.getElementById("news-board").innerHTML = errorHTML
+}
 
 
 getLatestNews();
