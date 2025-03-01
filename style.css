@@ -117,10 +117,25 @@ text-align: center;
     display: block;
     color: black;
   }
-  #logo-button {
-    width: 80%;
+  #logo-button img {
+    width: 70%;
+    margin: 5px auto;
+  }
+}
+
+/* @media screen and (max-width: 390px) {
+  .menus {
+    display: none;
+  }
+
+  .hamburger {
+    display: block;
+    color: black;
+  }
+  #logo-button img {
+    width: 70%;
     margin: 5px auto;
   }
 
 
-}
+} */
