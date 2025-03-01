@@ -56,7 +56,7 @@ const getLatestNews = async() => {
   // const url = new URL(`https://newsapi.org/v2/top-headlines?country=us&apiKey=${API_KEY}`);
   url = new URL(`https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?country=kr&pageSize=20`);
 
-  getNews();
+  await getNews();
 
 };
 
@@ -64,7 +64,7 @@ const getLatestNews = async() => {
 const getNewsByCategory = async (event) => {
     const category = event.target.textContent.toLowerCase();
   url = new URL(`https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?country=kr&category=${category}&pageSize=20`);
-  getNews();
+  await getNews();
 }
 
 
@@ -144,7 +144,7 @@ const getNewsByKeyword = async() => {
   const keyword = document.getElementById("search-input").value;
   url = new URL(`https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?country=kr&q=${keyword}&pageSize=20`);
   
-  getNews();
+  await getNews();
 }
 
 //에러메세지 보여주는 함수
