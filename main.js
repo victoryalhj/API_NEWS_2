@@ -4,11 +4,25 @@ const menus = document.querySelectorAll('.menus button')
 menus.forEach((menu) =>
   menu.addEventListener("click",(event)=>getNewsByCategory(event)))
 
-const categoryButtons = document.querySelectorAll('menus button, .sidenav button');
-categoryButtons.forEach((button) =>
-  button.addEventListener("click", (event) => getNewsByCategory(event)));
+const categoryButtons = document.querySelectorAll('.menus button, .sidenav button');
+
+categoryButtons.forEach((button) => {
+  button.addEventListener("click", (event) => {
+    //closebtn 버튼은 data-category 데이터 속성없으면 true, return 즉 종료됨
+    if (!event.target.dataset.category) return;
+
+    getNewsByCategory(event)
+   });
+  });
 
 let url = new URL(`https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?country=kr&pageSize=20`)
+
+//로고클릭시 홈페이지 메인으로가기
+document.getElementById("logo-button").addEventListener("click",function(event) {
+  event.preventDefault();
+  location.reload();
+})
+
 
 //코드리팩토링+에러핸들링링
 const getNews = async() => {

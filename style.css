@@ -68,6 +68,7 @@
   background-color: lightyellow;
   overflow: hidden;
   transition: 0.5s;
+  z-index: 1;
 }
 .sidenav button {
   display: block;
