@@ -1,165 +1,166 @@
-const API_KEY = `d787306ca4424a128d6c0ff4f0061698`;
+let category = "";
+let keyword = "";
 let newsList = [];
-const menus = document.querySelectorAll('.menus button')
-menus.forEach((menu) =>
-  menu.addEventListener("click",(event)=>getNewsByCategory(event)))
+let url = new URL(`https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?country=kr&pageSize=20`);
+let totalResults = 0;
+let page = 1;
+const pageSize = 10;
+const groupSize = 5;
 
-const categoryButtons = document.querySelectorAll('.menus button, .sidenav button');
+const categories = ['Entertainment','General','Health','Science','Sports','Technology'];
+const menus = document.querySelectorAll(".menus button");
+menus.forEach(menu => menu.addEventListener("click", (event)=> getNewsCategory(event)));
 
-categoryButtons.forEach((button) => {
-  button.addEventListener("click", (event) => {
-    //closebtn 버튼은 data-category 데이터 속성없으면 true, return 즉 종료됨
-    if (!event.target.dataset.category) return;
-
-    getNewsByCategory(event)
-   });
-  });
-
-let url = new URL(`https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?country=kr&pageSize=20`)
-
-//로고클릭시 홈페이지 메인으로가기
-document.getElementById("logo-button").addEventListener("click",function(event) {
-  event.preventDefault();
-  location.reload();
-})
-
-
-//코드리팩토링+에러핸들링링
 const getNews = async() => {
-  try {
+  try{
+    url.searchParams.set("page",page);
+    url.searchParams.set("pageSize",pageSize);
+
     const response = await fetch(url);
-    console.log("response",response)
 
     const data = await response.json();
- 
-    if(response.status===200){
-        //검색결과가 없다면 - 에러
-        if(data.articles.length === 0) {
-          throw new Error("No result for this search")
-        }
+    if(response.status === 200){
+      if(data.articles.length === 0){
+        throw new Error("No matches for your search.");
+      }
       newsList = data.articles;
+      totalResults = data.totalResults;
       render();
-    }else{
+      paginationRender();
+    }else {
       throw new Error(data.message)
     }
-
-
-  }catch(error){
-    console.log("error",error.message);
-    errorRender(error.message)
+  } catch(error) {
+    errorRender(error.message);
   }
-;
-}
-
-
-const getLatestNews = async() => {
-  // const url = new URL(`https://newsapi.org/v2/top-headlines?country=us&apiKey=${API_KEY}`);
-  url = new URL(`https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?country=kr&pageSize=20`);
-
-  await getNews();
-
 };
 
-
-const getNewsByCategory = async (event) => {
-    const category = event.target.textContent.toLowerCase();
-  url = new URL(`https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?country=kr&category=${category}&pageSize=20`);
+//API
+const getLatestNews = async () => {
+  url = new URL(`https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?country=kr&pageSize=20`); 
+    url.searchParams.set("country", "kr");
   await getNews();
 }
 
-
-const render = () => {
-  const newsHTML = newsList.map(
-    (news) => {
-    //내용없음
-    const description = news.description ? truncateText(news.description,200) :"내용없음";
-    //no image
-    const  imageUrl = news.urlToImage ? news.urlToImage : ".images/no_image.png";
-    // no source
-    const sourceName = news.source?.name? news.source.name : "no source";
-    const formattedDate = timeAgo(news.publishedAt);
-    
-    return `<div class="row news">
-    <div class="col-lg-4">
-      <img class="news-image-size" src=${news.urlToImage} alt="News Image" onerror="this.onerror=null; this.src='./images/no_image.png';">
-    </div>
-    <div class="col-lg-8">
-      <h2>${news.title}</h2>
-      <p>${news.description}</p>
-      <div>${sourceName} * ${formattedDate}</div>
-    </div>
-  </div>`
-}).join('');
-
-  document.getElementById('news-board').innerHTML=newsHTML;
-}
-
-//200자 축약
-const truncateText = (text, maxLength) => {
-  return text.length > maxLength ? text.substring(0, maxLength) + "..." : text;
+//Menu
+const getNewsCategory = async (event) => {
+  const selectedCategory = event.target.textContent.toLowerCase();
+  url = new URL(
+    `https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?country=kr&category=${category}&pageSize=20`
+  );
+  url.searchParams.set("country", "kr");
+  url.searchParams.set("category", selectedCategory);
+  page = 1;
+  await getNews();
 };
 
-//날짜축약
-const timeAgo = (dateString) => {
-  const now = new Date();
-  const past = new Date(dateString);
-  const diffInSeconds = Math.floor((now - past) / 1000);
-  const diffInMinutes = Math.floor(diffInSeconds / 60);
-  const diffInHours = Math.floor(diffInMinutes / 60);
-  const diffInDays = Math.floor(diffInHours / 24);
-  const diffInMonths = Math.floor(diffInDays / 30);
-  const diffInYears = Math.floor(diffInMonths / 12);
-
-  if (diffInYears > 0) return `${diffInYears} years ago`;
-  if (diffInMonths > 0) return `${diffInMonths} months ago`;
-  if (diffInDays > 0) return `${diffInDays} days ago`;
-  if (diffInHours > 0) return `${diffInHours} hours ago`;
-  if (diffInMinutes > 0) return `${diffInMinutes} minutes ago`;
-  return "just now";
-};
-
-
-
-//Nav메뉴 오픈
-function toggleNav () {
-  document.getElementById("side-menu").style.width = "250px";
-}
-//Nav메뉴 클로즈즈
-function closeNav () {
-  document.getElementById("side-menu").style.width = "0";
-}
-//검색창
-document.getElementById("search-icon").addEventListener("click", function () {
-  const searchBox = document.getElementById("search-box");
-
-  if (searchBox.style.display === "none" || searchBox.style.display === "") {
-    searchBox.style.display = "block";
-  } else {
-    searchBox.style.display = "none";
-  }
-});
-
-//검색버튼
+//keyword
 const getNewsByKeyword = async() => {
   const keyword = document.getElementById("search-input").value;
-  url = new URL(`https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?country=kr&q=${keyword}&pageSize=20`);
-  
+  url = new URL(`https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?country=kr&q=${keyword}&pageSize=20`)
   await getNews();
+};
+
+//Search
+const openSearchBox = () => {
+  let inputArea = document.getElementById("input-area");
+  let searchIcon = document.querySelector(".search-icon");
+
+  if (inputArea.style.display === "none" || inputArea.style.display === "" ) {
+    inputArea.style.display ="flex";
+    searchIcon.style.display ="none"; //검색아이콘 숨기기
+  }else {
+    inputArea.style.display = "none";
+    searchIcon.style.display = "inline-block"; //검색아이콘 보이기
+  }
 }
 
-//에러메세지 보여주는 함수
+//SideMenu
+const openNav = () => {
+  document.getElementById("mySidenav").style.width = "250px";
+};
+
+const closeNav = () => {
+  document.getElementById("mySidenav").style.width = "0";
+}
+
+
+//Render
+const render = () => {
+  const newsHTML = newsList.map(
+    (news) => `<div class="row news">
+                <div class="col-lg-4">
+                  <img class="news-img-size" src="${news.urlToImage || 'img/noimage.png'}" onerror="this.onerror=null; this.src='img/noimage.png';" />
+                </div>
+                <div class="col-lg-8">
+                  <h2>${news.title}</h2>
+                  <p>${news.description == null || news.description == "" ? "내용없음": news.description.length > 200 ? news.description.substring(0, 200) + "..." : news.description}</p>
+                  <div>${news.source.name || "no source"} * ${moment(news.publishedAt, "YYYYMMDD").fromNow()}</div>
+                </div>
+              </div>`
+    ).join('');
+    console.log("html", newsHTML);
+
+  document.getElementById('news-board').innerHTML = newsHTML
+}
+
 const errorRender = (errorMessage) => {
   const errorHTML = `<div class="alert alert-danger" role="alert">
   ${errorMessage}
   </div>`;
+
   document.getElementById("news-board").innerHTML = errorHTML
+};
+
+//Page
+const paginationRender = () => {
+  let paginationHTML=``;
+  const totalPages = Math.ceil(totalResults/pageSize)
+  let pageGroup = Math.ceil(page/groupSize);
+  let lastPage = pageGroup * groupSize;
+  if(lastPage > totalPages){
+    lastPage = totalPages
+  }
+  const firstPage = lastPage - (groupSize-1)<=0? 1: lastPage - (groupSize - 1);
+  let last = pageGroup * 5;
+    if(last > totalPages) {
+      last = totalPages;
+    }
+  let first = last -4 <= 0 ? 1 : last -4;
+
+  if(page > 1) {
+    paginationHTML = `<li class="page-item" onclick="moveToPage(1)">
+                          <a class="page-link" href="#">&lt;&lt;</a>
+                        </li>
+                        <li class="page-item" onclick="moveToPage(${page-1})">
+                          <a class="page-link" href="#">&lt;</a>
+                        </li>`;
+  }
+  for(let i=firstPage; i<=lastPage; i++){
+    paginationHTML+=` <li class="page-item ${i === page? "active" : ""}" onclick="moveToPage(${i})">
+                        <a class="page-link">${i}</a> 
+                      </li>`;
+  }
+  if(page < totalPages) {
+  paginationHTML+=`<li class="page-item" onclick="moveToPage(${page+1})">
+                    <a class="page-link" href="#">&gt;</a>
+                  </li>
+                  <li class="page-item" onclick="moveToPage(${totalPages})">
+                    <a class="page-link" href="#">&gt;&gt;</a>
+                  </li>`;
+  }
+  document.querySelector(".pagination").innerHTML = paginationHTML
+
+
 }
 
+const moveToPage = (pageNum) => {
+  console.log("move",pageNum);
+  page = pageNum;
+  getNews()
+}
 
 getLatestNews();
 
-//카테고리 연결
-//1.버튼들에 클릭이벤트
-//2.카테고리별 뉴스 가져오기
-//3. 그 뉴스 보여주기기
+
 
